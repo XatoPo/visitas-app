@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: deploy-pipeline
+spec:
+  tasks:
+    - name: build-backend
+      taskRef:
+        name: kaniko
+      params:
+        - name: IMAGE
+          value: docker.io/yourusername/backend-app:latest
+
+    - name: build-frontend
+      taskRef:
+        name: kaniko
+      params:
+        - name: IMAGE
+          value: docker.io/yourusername/frontend-app:latest
+
+    - name: deploy-backend
+      runAfter:
+        - build-backend
+      taskRef:
+        name: kubectl-apply
+      params:
+        - name: manifests
+          value: backend-deployment.yaml
+
+    - name: deploy-frontend
+      runAfter:
+        - build-frontend
+      taskRef:
+        name: kubectl-apply
+      params:
+        - name: manifests
+          value: frontend-deployment.yaml
