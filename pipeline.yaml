@@ -9,14 +9,14 @@ spec:
         name: kaniko
       params:
         - name: IMAGE
-          value: docker.io/yourusername/backend-app:latest
+          value: docker.io/xatopo/backend-app:latest
 
     - name: build-frontend
       taskRef:
         name: kaniko
       params:
         - name: IMAGE
-          value: docker.io/yourusername/frontend-app:latest
+          value: docker.io/xatopo/frontend-app:latest
 
     - name: deploy-backend
       runAfter:

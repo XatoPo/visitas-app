@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: backend-app:latest
+        image: xatopo/backend-app:latest
         ports:
         - containerPort: 8000
 ---
@@ -23,10 +23,8 @@ kind: Service
 metadata:
   name: backend-service
 spec:
-  type: NodePort
   ports:
   - port: 8000
     targetPort: 8000
-    nodePort: 30001
   selector:
     app: backend

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: frontend-app:latest
+        image: xatopo/frontend-app:latest
         ports:
         - containerPort: 80
 ---
@@ -23,10 +23,8 @@ kind: Service
 metadata:
   name: frontend-service
 spec:
-  type: NodePort
   ports:
   - port: 80
     targetPort: 80
-    nodePort: 30000
   selector:
     app: frontend
