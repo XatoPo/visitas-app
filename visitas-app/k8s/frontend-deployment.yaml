@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: xatopo/frontend-app:latest
+        image: xatopo/frontend-app:v1.1
         ports:
         - containerPort: 80
 ---
