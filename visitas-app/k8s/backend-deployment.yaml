@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: backend
-        image: xatopo/backend-app:latest
+        image: xatopo/backend-app:v1.1
+        imagePullPolicy: Never
         ports:
         - containerPort: 8000
 ---
