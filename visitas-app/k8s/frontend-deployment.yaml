@@ -23,8 +23,10 @@ kind: Service
 metadata:
   name: frontend-service
 spec:
+  type: NodePort
   ports:
   - port: 80
     targetPort: 80
+    nodePort: 30080  # Puedes especificar un puerto específico aquí
   selector:
     app: frontend

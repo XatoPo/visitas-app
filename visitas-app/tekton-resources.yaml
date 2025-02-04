@@ -1,0 +1,67 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: kaniko
+spec:
+  params:
+    - name: IMAGE
+      type: string
+  steps:
+    - name: build-and-push
+      image: gcr.io/kaniko-project/executor:latest
+      args:
+        - --dockerfile=/workspace/Dockerfile
+        - --context=/workspace
+        - --destination=$(params.IMAGE)
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: kubectl-apply
+spec:
+  params:
+    - name: manifests
+      type: string
+  steps:
+    - name: kubectl-apply
+      image: bitnami/kubectl:latest
+      script: |
+        kubectl apply -f $(params.manifests)
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: deploy-pipeline
+spec:
+  tasks:
+    - name: build-backend
+      taskRef:
+        name: kaniko
+      params:
+        - name: IMAGE
+          value: docker.io/xatopo/backend-app:v1.1
+
+    - name: build-frontend
+      taskRef:
+        name: kaniko
+      params:
+        - name: IMAGE
+          value: docker.io/xatopo/frontend-app:v1.1
+
+    - name: deploy-backend
+      runAfter:
+        - build-backend
+      taskRef:
+        name: kubectl-apply
+      params:
+        - name: manifests
+          value: k8s/backend-deployment.yaml
+
+    - name: deploy-frontend
+      runAfter:
+        - build-frontend
+      taskRef:
+        name: kubectl-apply
+      params:
+        - name: manifests
+          value: k8s/frontend-deployment.yaml

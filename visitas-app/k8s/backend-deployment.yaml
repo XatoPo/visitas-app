@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -18,11 +19,15 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 8000
+        env:
+        - name: POSTGRES_SERVICE_HOST
+          value: "postgres-service"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
+  namespace: default
 spec:
   ports:
   - port: 8000
